@@ -1,7 +1,7 @@
 /** Tên biến môi trường dùng để đọc qua ConfigService */
 export enum ConfigKey {
   PORT = 'PORT',
-  DB_URL = 'DB_URL',
+  DATABASE_URL = 'DATABASE_URL',
 }
 
 /** Giá trị mặc định khi biến môi trường tương ứng không được cấu hình */

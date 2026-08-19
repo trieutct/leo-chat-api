@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import appConfig from './config/app.config'
 import { envValidationSchema } from './config/env.validation'
+import { PrismaModule } from './prisma/prisma.module'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 
@@ -19,6 +20,7 @@ import { AppService } from './app.service'
         abortEarly: false,
       },
     }),
+    PrismaModule,
   ],
   controllers: [AppController],
   providers: [AppService],
