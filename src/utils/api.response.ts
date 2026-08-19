@@ -21,7 +21,7 @@ export class CommonListResponse<T> {
 /** Chi tiết 1 lỗi cụ thể trong response lỗi (ví dụ lỗi từng field khi validate) */
 export interface IErrorResponse {
   key: string
-  errorCode: number
+  error_code: number
   message: string
   data?: any
 }

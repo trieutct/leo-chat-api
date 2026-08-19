@@ -54,25 +54,30 @@ export class HttpExceptionFilter implements ExceptionFilter {
     if (typeof res === 'string') return res
     if (typeof res === 'object' && res !== null && 'message' in res) {
       const msg = (res as { message: unknown }).message
-      // message là mảng (lỗi từ ValidationPipe) thì dùng message tổng quát của exception
+      // message là mảng (lỗi từ ValidationPipe mặc định) thì dùng message tổng quát của exception
       return Array.isArray(msg) ? exception.message : String(msg)
     }
     return exception.message
   }
 
-  /** Lấy danh sách lỗi chi tiết (dùng cho lỗi validate DTO trả message dạng mảng) */
+  /** Lấy danh sách lỗi chi tiết (ưu tiên field errors có sẵn, ví dụ từ JoiValidationPipe) */
   private extractErrors(exception: HttpException): IErrorResponse[] {
     const res = exception.getResponse()
-    if (typeof res !== 'object' || res === null || !('message' in res)) {
-      return []
+    if (typeof res !== 'object' || res === null) return []
+
+    // Pipe tự build sẵn errors[] (key, error_code, message) thì dùng luôn, không cần parse lại
+    if ('errors' in res && Array.isArray((res as { errors: unknown }).errors)) {
+      return (res as { errors: IErrorResponse[] }).errors
     }
+
+    if (!('message' in res)) return []
     const msg = (res as { message: unknown }).message
     if (!Array.isArray(msg)) return []
 
-    // Mỗi phần tử message của ValidationPipe là 1 lỗi field, map về IErrorResponse
+    // Trường hợp message là mảng string thô (ValidationPipe mặc định của Nest), không có key field
     return msg.map(item => ({
       key: '',
-      errorCode: exception.getStatus(),
+      error_code: exception.getStatus(),
       message: String(item),
     }))
   }
