@@ -15,7 +15,7 @@ export class ApiResponse<T> {
 /** Shape dữ liệu dạng danh sách kèm tổng số bản ghi */
 export class CommonListResponse<T> {
   items!: T[]
-  totalItems!: number
+  total_items!: number
 }
 
 /** Chi tiết 1 lỗi cụ thể trong response lỗi (ví dụ lỗi từng field khi validate) */
@@ -30,6 +30,7 @@ export interface IErrorResponse {
 export class SuccessResponse {
   constructor(data = {}, message = DEFAULT_SUCCESS_MESSAGE) {
     return {
+      success: true,
       code: HttpStatus.OK,
       message,
       data,
@@ -37,7 +38,7 @@ export class SuccessResponse {
   }
 }
 
-/** Bọc response thành công dạng danh sách theo format { code, message, data: { items, totalItems } } */
+/** Bọc response thành công dạng danh sách theo format { code, message, data: { items, total_items } } */
 export class SuccessListResponse {
   constructor(
     data = {},
@@ -50,7 +51,7 @@ export class SuccessListResponse {
       message,
       data: {
         items: data,
-        totalItems: total,
+        total_items: total,
         ...additionalInfo,
       },
     }
@@ -65,6 +66,7 @@ export class ErrorResponse {
     errors: IErrorResponse[] = [],
   ) {
     return {
+      success: false,
       code,
       message,
       errors,

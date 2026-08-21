@@ -11,5 +11,43 @@
         "watchAssets": true
       }
     ]
+  },
+  "monorepo": true,
+  "root": "src",
+  "projects": {
+    "leo-chat-api": {
+      "type": "application",
+      "root": ".",
+      "entryFile": "main",
+      "sourceRoot": "src",
+      "compilerOptions": {
+        "tsConfigPath": "tsconfig.build.json"
+      }
+    },
+    "user-service": {
+      "type": "application",
+      "root": "apps/user-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/user-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/user-service/tsconfig.app.json",
+        "assets": [
+          {
+            "include": "generated/prisma/**/*",
+            "outDir": "dist/apps/user-service/apps/user-service/src",
+            "watchAssets": true
+          }
+        ]
+      }
+    },
+    "email-service": {
+      "type": "application",
+      "root": "apps/email-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/email-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/email-service/tsconfig.app.json"
+      }
+    }
   }
 }

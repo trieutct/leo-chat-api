@@ -20,15 +20,3 @@ model User {
 
   @@map("users")
 }
-
-/// Giống hệt User nhưng có đánh index trên "name" để so sánh tốc độ query
-model User2 {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([name])
-  @@map("users_2")
-}

@@ -22,7 +22,7 @@ async function seedData(prisma: PrismaClient): Promise<void> {
 
   // Xóa data cũ để đảm bảo seed sạch, tránh trùng lặp
   await prisma.user.deleteMany()
-  await prisma.user2.deleteMany()
+  // await prisma.user2.deleteMany()
 
   for (let offset = 0; offset < TOTAL_RECORD; offset += BATCH_SIZE) {
     const batch_size = Math.min(BATCH_SIZE, TOTAL_RECORD - offset)
@@ -87,7 +87,7 @@ async function benchmarkSearch(prisma: PrismaClient): Promise<void> {
 
   // Bảng users_2: không index trên email -> phải full scan
   await measureSearch('KHÔNG index (users_2)', () =>
-    prisma.user2.findFirst({ where: { email: target_email } }),
+    prisma.user.findFirst({ where: { email: target_email } }),
   )
 }
 
