@@ -1,7 +1,12 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { ClientProxyFactory, Transport } from '@nestjs/microservices'
-import { AppDefault, ConfigKey, EMAIL_SERVICE_QUEUE } from '../common/constants'
+import {
+  AppDefault,
+  ConfigKey,
+  EMAIL_SERVICE_DLX,
+  EMAIL_SERVICE_QUEUE,
+} from '../common/constants'
 
 /** Token DI để inject ClientProxy kết nối tới email-service qua RabbitMQ */
 export const EMAIL_SERVICE_CLIENT = 'EMAIL_SERVICE_CLIENT'
@@ -24,6 +29,11 @@ export const EMAIL_SERVICE_CLIENT = 'EMAIL_SERVICE_CLIENT'
             queue: EMAIL_SERVICE_QUEUE,
             queueOptions: {
               durable: true,
+              // phải khớp với arguments email-service dùng để assert queue, tránh lỗi
+              // "PRECONDITION_FAILED - inequivalent arg" khi 2 service cùng assert 1 queue
+              arguments: {
+                'x-dead-letter-exchange': EMAIL_SERVICE_DLX,
+              },
             },
           },
         }),

@@ -37,6 +37,7 @@ export class UserService {
 
   /** Tạo user: verify email đồng bộ (RPC) trước khi ghi DB, xong bắn event async gửi mail chào mừng */
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
+    this.emailClient.emit(EmailMessagePattern.TEST_QUEUE_ERROR, {})
     // bước 1 - SYNC: gọi RPC sang email-service, chờ kết quả verify trước khi tạo user
     const verifyResult = await this.verifyEmail(createUserDto.email)
     if (!verifyResult.is_valid) {

@@ -14,6 +14,7 @@ async function bootstrap() {
     configService.get<number>(ConfigKey.USER_SERVICE_PORT) ??
     AppDefault.USER_SERVICE_PORT
 
+  app.setGlobalPrefix('api')
   app.useGlobalInterceptors(new TransformInterceptor())
   app.useGlobalFilters(new HttpExceptionFilter())
   await app.listen(port)

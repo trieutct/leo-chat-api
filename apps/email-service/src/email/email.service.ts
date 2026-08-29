@@ -25,14 +25,28 @@ export class EmailService {
     return { is_valid: true }
   }
 
-  /** Gửi mail chào mừng (giả lập, chỉ log ra console) */
-  sendWelcomeEmail(payload: {
+  /** Gửi mail chào mừng (giả lập, chỉ log ra console); throw lỗi để caller quyết định nack/DLQ */
+  async sendWelcomeEmail(payload: {
     user_id: string
     name: string
     email: string
-  }): void {
-    this.logger.log(
-      `[ASYNC] Đã gửi mail chào mừng tới ${payload.email} (user: ${payload.name}, id: ${payload.user_id})`,
-    )
+  }): Promise<void> {
+    try {
+      this.logger.log(
+        `[ASYNC] Đã gửi mail chào mừng tới ${payload.email} (user: ${payload.name}, id: ${payload.user_id})`,
+      )
+    } catch (error) {
+      this.logger.error(`Gửi mail chào mừng thất bại: ${error}`)
+      throw error
+    }
+  }
+
+  async testMessageQueueError(text: string): Promise<void> {
+    try {
+      this.logger.log(`[ASYNC] testMessageQueueError ${text}`)
+    } catch (error) {
+      this.logger.error(`Gửi mail chào mừng thất bại: ${error}`)
+      throw error
+    }
   }
 }
