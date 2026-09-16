@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common'
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
-import { SuccessResponse } from 'src/utils/api.response'
+import { SuccessListResponse, SuccessResponse } from 'src/utils/api.response'
 
 /**
  * Bọc mọi response thành công theo format chuẩn { code, message, data }
@@ -24,8 +24,11 @@ export class TransformInterceptor<T> implements NestInterceptor<
   ): Observable<SuccessResponse> {
     return next.handle().pipe(
       map((data: any) => {
-        // Handler đã tự trả SuccessResponse (vd: SuccessListResponse) thì giữ nguyên, không bọc lồng
-        if (data instanceof SuccessResponse) {
+        // Handler đã tự trả SuccessResponse/SuccessListResponse thì giữ nguyên, không bọc lồng
+        if (
+          data instanceof SuccessResponse ||
+          data instanceof SuccessListResponse
+        ) {
           return data
         }
         return new SuccessResponse(data as object)

@@ -15,7 +15,7 @@ export class ApiResponse<T> {
 /** Shape dữ liệu dạng danh sách kèm tổng số bản ghi */
 export class CommonListResponse<T> {
   items!: T[]
-  totalItems!: number
+  total_items!: number
 }
 
 /** Chi tiết 1 lỗi cụ thể trong response lỗi (ví dụ lỗi từng field khi validate) */
@@ -28,31 +28,37 @@ export interface IErrorResponse {
 
 /** Bọc response thành công theo format { code, message, data } */
 export class SuccessResponse {
+  public code: number
+  public message: string
+  public data: object
+
   constructor(data = {}, message = DEFAULT_SUCCESS_MESSAGE) {
-    return {
-      code: HttpStatus.OK,
-      message,
-      data,
-    }
+    // Gán qua this (không return object literal) để instanceof SuccessResponse hoạt động đúng
+    this.code = HttpStatus.OK
+    this.message = message
+    this.data = data
   }
 }
 
-/** Bọc response thành công dạng danh sách theo format { code, message, data: { items, totalItems } } */
+/** Bọc response thành công dạng danh sách theo format { code, message, data: { items, total_items } } */
 export class SuccessListResponse {
+  public code: number
+  public message: string
+  public data: { items: object; total_items: number; [key: string]: any }
+
   constructor(
     data = {},
     total = 0,
     additionalInfo: Record<string, any> = {},
     message = DEFAULT_SUCCESS_MESSAGE,
   ) {
-    return {
-      code: HttpStatus.OK,
-      message,
-      data: {
-        items: data,
-        totalItems: total,
-        ...additionalInfo,
-      },
+    // Gán qua this (không return object literal) để instanceof SuccessListResponse hoạt động đúng
+    this.code = HttpStatus.OK
+    this.message = message
+    this.data = {
+      items: data,
+      total_items: total,
+      ...additionalInfo,
     }
   }
 }
