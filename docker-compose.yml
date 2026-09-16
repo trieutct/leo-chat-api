@@ -1,0 +1,24 @@
+services:
+  # ----------------------------------------------------------
+  # Service API - app NestJS (tự build từ Dockerfile)
+  # ----------------------------------------------------------
+  api:
+    # Tên container cố định cho dễ quản lý (docker logs api, docker exec api...)
+    container_name: leo_chat_api
+
+    build:
+      context: . # Build từ thư mục hiện tại
+      dockerfile: Dockerfile # File Dockerfile dùng để build image
+
+    # Map port: 'HOST:CONTAINER'
+    # - Trái: port trên máy thật (mặc định 3000)
+    # - Phải: port app listen bên trong container
+    ports:
+      - '${PORT:-3000}:3000'
+
+    # Nạp toàn bộ biến từ file .env (bao gồm DATABASE_URL trỏ tới Postgres ngoài)
+    env_file:
+      - .env
+
+    # Tự khởi động lại khi crash / reboot, trừ khi chủ động docker stop
+    restart: unless-stopped
